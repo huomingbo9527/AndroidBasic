@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.huo.androidbasicstudy">
+
+    <application
+        android:name=".MyApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.mode.ModeSingleAffinityActivity"
+            android:launchMode="singleTop" android:taskAffinity="com.huo.taskSelf"/>
+        <activity
+            android:name=".activity.mode.ModelSingleInstanceActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".activity.mode.ModeSingleTaskActivity"
+            android:launchMode="singleTask" android:taskAffinity="com.huo.taskSelf">
+<!--            <intent-filter>-->
+<!--                <action android:name="com.huo.task.activity"/>-->
+<!--                <category android:name="android.intent.category.DEFAULT"/>-->
+<!--            </intent-filter>-->
+        </activity>
+
+        <activity
+            android:name=".activity.mode.ModelSingleTopActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.mode.ModeStandardActivity"
+            android:launchMode="standard" />
+        <activity android:name=".activity.TaskActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -19,6 +19,7 @@
         <activity
             android:name=".activity.mode.ModeSingleTaskActivity"
             android:launchMode="singleTask" android:taskAffinity="com.huo.taskSelf">
+<!--            更改 gradle applicationId 调试不同应用activity跳转-->
 <!--            <intent-filter>-->
 <!--                <action android:name="com.huo.task.activity"/>-->
 <!--                <category android:name="android.intent.category.DEFAULT"/>-->

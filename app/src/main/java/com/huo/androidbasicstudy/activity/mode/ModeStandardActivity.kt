@@ -11,11 +11,11 @@ class ModeStandardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mode_standard2)
         textView.setOnClickListener {
-            val intent = Intent(applicationContext, ModeSingleTaskActivity::class.java)
-            startActivity(intent)
-
-//            val intent = Intent(applicationContext, ModelSingleInstanceActivity::class.java)
+//            val intent = Intent(applicationContext, ModeSingleTaskActivity::class.java)
 //            startActivity(intent)
+
+            val intent = Intent(applicationContext, ModelSingleInstanceActivity::class.java)
+            startActivity(intent)
 
 //            val intent = Intent("com.huo.task.activity")
 //            startActivity(intent)

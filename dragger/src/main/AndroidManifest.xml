@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.huo.dragger">
+
+    <application>
+        <activity android:name=".base.DaggerActivity"></activity>
+        <activity android:name=".base.inject.DaggerInjectActivity"></activity>
+        <activity android:name=".base.module.ModuleStudyActivity"></activity>
+        <activity android:name=".base.component.ComponentStudyActivity"></activity>
+
+    </application>
+
+</manifest>

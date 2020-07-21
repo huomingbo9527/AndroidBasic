@@ -1,4 +1,4 @@
-//include ':common'
+include ':plugin_function'//include ':common'
 include ':dragger'
 include ':Service'
 include ':app'

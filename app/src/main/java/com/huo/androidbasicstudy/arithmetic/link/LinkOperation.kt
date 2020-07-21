@@ -1,5 +1,7 @@
 package com.huo.androidbasicstudy.arithmetic.link
 
+import com.huo.androidbasicstudy.arithmetic.sort.MergeSort
+import com.huo.androidbasicstudy.arithmetic.sort.QuickSort
 import com.huo.androidbasicstudy.arithmetic.sort.Sort
 
 
@@ -14,7 +16,11 @@ class LinkOperation {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            Sort.printAll(Sort.insert(Sort.arr))
+//            MergeSort.mergeSortHuo(Sort.arr, Sort.arr.size);
+//            Sort.mergeSort(Sort.arr, 0, Sort.arr.size)
+            QuickSort.quickSort(Sort.arr,Sort.arr.size)
+            Sort.printAll(Sort.arr)
+//            Sort.printAll(Sort.insert(Sort.arr))
         }
     }
 

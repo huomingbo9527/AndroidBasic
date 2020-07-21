@@ -10,22 +10,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.plugin.ProxyActivity"></activity>
+        <activity android:name=".activity.plugin.StubActivity" />
         <activity
             android:name=".activity.mode.ModeSingleAffinityActivity"
-            android:launchMode="singleTop" android:taskAffinity="com.huo.taskSelf"/>
+            android:launchMode="singleTop"
+            android:taskAffinity="com.huo.taskSelf" />
         <activity
             android:name=".activity.mode.ModelSingleInstanceActivity"
             android:launchMode="singleInstance" />
         <activity
             android:name=".activity.mode.ModeSingleTaskActivity"
-            android:launchMode="singleTask" android:taskAffinity="com.huo.taskSelf">
-<!--            更改 gradle applicationId 调试不同应用activity跳转-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.huo.task.activity"/>-->
-<!--                <category android:name="android.intent.category.DEFAULT"/>-->
-<!--            </intent-filter>-->
-        </activity>
+            android:launchMode="singleTask"
+            android:taskAffinity="com.huo.taskSelf">
 
+            <!-- 更改 gradle applicationId 调试不同应用activity跳转 -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="com.huo.task.activity"/> -->
+            <!-- <category android:name="android.intent.category.DEFAULT"/> -->
+            <!-- </intent-filter> -->
+        </activity>
         <activity
             android:name=".activity.mode.ModelSingleTopActivity"
             android:launchMode="singleTop" />

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/dragger" />
             <option value="$PROJECT_DIR$/plugin_function" />
+            <option value="$PROJECT_DIR$/rxjava" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

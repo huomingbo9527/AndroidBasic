@@ -1,3 +1,4 @@
+include ':rxjava'
 include ':plugin_function'//include ':common'
 include ':dragger'
 include ':Service'

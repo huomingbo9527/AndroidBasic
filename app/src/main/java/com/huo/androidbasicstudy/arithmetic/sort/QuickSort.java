@@ -1,6 +1,41 @@
 package com.huo.androidbasicstudy.arithmetic.sort;
 
 public class QuickSort {
+
+    public static void quickSortHuo(int[] arr,int n){
+        quickInternallyHuo(arr,0,n-1);
+    }
+
+    private static void quickInternallyHuo(int[] arr,int start,int end) {
+        if(start >= end)
+            return;
+        int center = anchorAndSortHuo(arr,start,end);
+        quickInternallyHuo(arr,start,center - 1);
+        quickInternallyHuo(arr,center + 1,end);
+    }
+
+    private static int anchorAndSortHuo(int[] arr,int start,int end) {
+        int centerValue = arr[end];
+        int center = start;
+        int i = start;
+        for (;i < end; i++) {
+            if(arr[i] < centerValue){
+                if(center == i){
+                    center ++;
+                }else{
+                    int tmp = arr[i];
+                    arr[i] = arr[center];
+                    arr[center++] = tmp;
+                }
+            }
+        }
+
+        arr[end] = arr[center];
+        arr[center] = centerValue;
+        return center;
+    }
+
+
     // 快速排序，a是数组，n表示数组的大小
     public static void quickSort(int[] a, int n) {
         quickSortInternally(a, 0, n-1);

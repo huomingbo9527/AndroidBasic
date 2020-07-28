@@ -1,6 +1,7 @@
 package com.huo.androidbasicstudy.activity.plugin.other;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ public class PluginTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Resources.Theme theme = getTheme();
+
         setContentView(R.layout.activity_plugin_test);
     }
 

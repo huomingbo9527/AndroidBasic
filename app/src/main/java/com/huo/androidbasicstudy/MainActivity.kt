@@ -10,7 +10,6 @@ import com.huo.androidbasicstudy.activity.plugin.other.PluginTestActivity
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dagger_main)
         val intent = Intent(applicationContext, PluginTestActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

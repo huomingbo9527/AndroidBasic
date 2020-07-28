@@ -9,7 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-
+import com.huo.androidbasicstudy.activity.plugin.util.PluginAPKProvider;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class InstrumentationProxy extends Instrumentation {
         List<ResolveInfo> infos = mPackageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL);
         if (infos == null || infos.size() == 0) {
             intent.putExtra(HookHelper.TARGET_INTENT, intent.getComponent().getClassName());
-            intent.setClassName(who, "com.github.xch168.plugindemo.StubActivity");
+            intent.setClassName(who, PluginAPKProvider.stubActivityName);
         }
         try {
             Method execMethod = Instrumentation.class.getDeclaredMethod("execStartActivity", Context.class,
@@ -44,9 +44,10 @@ public class InstrumentationProxy extends Instrumentation {
     public Activity newActivity(ClassLoader cl, String className, Intent intent) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         String intentName = intent.getStringExtra(HookHelper.TARGET_INTENT);
         if (!TextUtils.isEmpty(intentName)) {
-            return super.newActivity(cl, intentName, intent);
+            return mInstrumentation.newActivity(cl, intentName, intent);
         }
-        return super.newActivity(cl, className, intent);
-
+        return mInstrumentation.newActivity(cl, className, intent);
     }
+
+
 }

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.huo.androidbasicstudy.activity.plugin.util.PluginAPKProvider;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -49,9 +51,9 @@ public class ProxyActivity extends Activity {
 //            if (TextUtils.isEmpty(mPluginDexPath) || TextUtils.isEmpty(mPluginActivityClassName)) {
 //                return;
 //            }
-            File dexOutputDir = getFile();
+            File dexOutputDir = PluginAPKProvider.getFile(this);
             mPluginDexPath = dexOutputDir.getPath();
-            mPluginActivityClassName = "com.huo.plugin_function.PluginFunctionActivity";
+            mPluginActivityClassName = PluginAPKProvider.mPluginActivityClassName;
 
             loadApkResources(); // 加载资源
 
@@ -101,29 +103,6 @@ public class ProxyActivity extends Activity {
         }
     }
 
-    @NotNull
-    private File getFile() {
-        AssetManager assets = getAssets();
-        String[] list = new String[0];
-        try {
-            list = assets.list("");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String apkName = null;
-        for(String name : list){
-            if (name.endsWith(".apk")){
-                apkName = name;
-            }
-        }
-        File dexOutputDir = new File(getExternalCacheDir(), "plugin.apk");
-        try {
-            writeBytesToFile(assets.open(apkName),dexOutputDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return dexOutputDir;
-    }
 
     @Override
     protected void onResume() {
@@ -204,24 +183,4 @@ public class ProxyActivity extends Activity {
         return super.getResources();
     }
 
-
-    public static void writeBytesToFile(InputStream is, File file) throws IOException{
-        FileOutputStream fos = null;
-        try {
-            byte[] data = new byte[2048];
-            int nbread = 0;
-            fos = new FileOutputStream(file);
-            while((nbread=is.read(data))>-1){
-                fos.write(data,0,nbread);
-            }
-        }
-        catch (Exception ex) {
-            Log.v("Exception",ex.getMessage());
-        }
-        finally{
-            if (fos!=null){
-                fos.close();
-            }
-        }
-    }
 }

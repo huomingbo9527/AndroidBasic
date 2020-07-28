@@ -1,13 +1,13 @@
 package com.huo.androidbasicstudy.activity.plugin.other;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
-
+import com.huo.androidbasicstudy.activity.plugin.util.PluginAPKProvider;
 import com.huo.androidbasicstudy.util.ReflectUtil;
-
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -23,6 +23,7 @@ public class PluginHelper {
     private static final String FIELD_DEX_ELEMENTS = "dexElements";
 
     private static Resources sPluginResources;
+    private static File pluginFile;
 
     public static void loadPlugin(Context context, ClassLoader hostClassLoader) throws Exception {
         loadPluginClass(context, hostClassLoader);
@@ -32,15 +33,19 @@ public class PluginHelper {
 
     private static void loadPluginClass(Context context, ClassLoader hostClassLoader) throws Exception {
         // Step1. 获取到插件apk，通常都是从网络上下载，这里为了演示，直接将插件apk push到手机
-        File pluginFile = context.getExternalFilesDir("plugin");
-        Log.i(TAG, "pluginPath:" + pluginFile.getAbsolutePath());
-        if (pluginFile == null || !pluginFile.exists() || pluginFile.listFiles().length == 0) {
-            Toast.makeText(context, "插件文件不存在", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        pluginFile = pluginFile.listFiles()[0];
+        pluginFile = PluginAPKProvider.getFile((Activity) context);
+//        File pluginFile = context.getExternalFilesDir("plugin");
+        Log.i(TAG, "pluginAbsolutePath:" + pluginFile.getAbsolutePath());
+        Log.i(TAG, "pluginPath:" + pluginFile.getPath());
+
+//        if (pluginFile == null || !pluginFile.exists() || pluginFile.listFiles().length == 0) {
+//            Toast.makeText(context, "插件文件不存在", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        pluginFile = pluginFile.listFiles()[0];
         // Step2. 创建插件的DexClassLoader
-        DexClassLoader pluginClassLoader = new DexClassLoader(pluginFile.getAbsolutePath(), null, null, hostClassLoader);
+        DexClassLoader pluginClassLoader = new DexClassLoader(pluginFile.getPath(), pluginFile.getAbsolutePath(), null, hostClassLoader);
+
         // Step3. 通过反射获取到pluginClassLoader中的pathList字段
         Object pluginDexPathList = ReflectUtil.getField(BaseDexClassLoader.class, pluginClassLoader, FIELD_PATH_LIST);
         // Step4. 通过反射获取到DexPathList的dexElements字段
@@ -72,9 +77,10 @@ public class PluginHelper {
     public static void initPluginResource(Context context) throws Exception {
         Class<AssetManager> clazz = AssetManager.class;
         AssetManager assetManager = clazz.newInstance();
-        Method method = clazz.getMethod("addAssetPath", String.class);
-        method.invoke(assetManager, context.getExternalFilesDir("plugin").listFiles()[0].getAbsolutePath());
-        sPluginResources = new Resources(assetManager, context.getResources().getDisplayMetrics(), context.getResources().getConfiguration());
+        Method addAssetPath = clazz.getDeclaredMethod("addAssetPath", String.class);
+        addAssetPath.setAccessible(true);
+        addAssetPath.invoke(assetManager,pluginFile.getParent());
+        sPluginResources = new Resources(assetManager,context.getResources().getDisplayMetrics(), context.getResources().getConfiguration());
     }
 
     public static Resources getPluginResources() {

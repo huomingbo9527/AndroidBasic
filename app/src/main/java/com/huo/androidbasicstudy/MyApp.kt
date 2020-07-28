@@ -2,10 +2,26 @@ package com.huo.androidbasicstudy
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import com.huo.androidbasicstudy.activity.plugin.other.HookHelper
+import com.huo.androidbasicstudy.activity.plugin.other.PluginHelper
+
+
+
 
 class MyApp : Application() {
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        HookHelper.hookInstrumentation(base)
+    }
+    override fun getResources(): Resources? {
+        return if (PluginHelper.getPluginResources() == null) super.getResources() else PluginHelper.getPluginResources()
+    }
+
 
     override fun onCreate() {
         super.onCreate()

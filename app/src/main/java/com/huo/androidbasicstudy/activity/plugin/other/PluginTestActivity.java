@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.huo.androidbasicstudy.R;
-public class MainActivity extends AppCompatActivity {
+import com.huo.androidbasicstudy.activity.plugin.util.PluginAPKProvider;
+
+public class PluginTestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_plugin_test);
     }
 
     public void loadPlugin(View view) {
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public void launchPluginActivity(View view) {
         Class pluginActivityClass = null;
         try {
-            pluginActivityClass = Class.forName("com.github.xch168.plugin.PluginActivity");
+            pluginActivityClass = Class.forName(PluginAPKProvider.mPluginActivityClassName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package com.huo.rxjava
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_rxjava.*
 
 //1、创建操作符
 //举例：create、just、from、fromArray、fromIterable、Defer、Interval、Timer、Repeat等
@@ -68,6 +69,10 @@ class RxjavaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rxjava)
+
+        scheduler.setOnClickListener {
+            ScheduleTest.testScheduleThread()
+        }
     }
 
 

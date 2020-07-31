@@ -10,9 +10,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.plugin.other.PluginStubActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name=".view.ViewPostActivity"></activity>
+        <activity
+            android:name=".activity.plugin.other.PluginStubActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activity.plugin.ProxyActivity" />
-        <activity android:name=".activity.plugin.other.PluginTestActivity" />
+        <activity
+            android:name=".activity.plugin.other.PluginTestActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.mode.ModeSingleAffinityActivity"
             android:launchMode="singleTop"

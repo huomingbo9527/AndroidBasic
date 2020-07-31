@@ -1,6 +1,6 @@
-//include ':rxjava'
-//include ':plugin_function'//include ':common'
+include ':rxjava'
+//include ':plugin_function'//插件化  插件
 //include ':dragger'
-include ':Service'
+//include ':Service'
 include ':app'
 rootProject.name = "AndroidBasicStudy"

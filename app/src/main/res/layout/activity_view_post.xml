@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huo.androidbasicstudy.view.ViewPostParent xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewPostParent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.ViewPostActivity"
+    >
+
+    <com.huo.androidbasicstudy.view.ViewPostChild
+        android:id="@+id/viewPostChild"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</com.huo.androidbasicstudy.view.ViewPostParent>

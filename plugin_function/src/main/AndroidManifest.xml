@@ -3,8 +3,8 @@
     package="com.huo.plugin_function">
 
     <application>
-        <activity android:name=".PluginRealTestActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".PluginFunctionActivity" android:theme="@style/AppTheme">
+        <activity android:name=".PluginRealTestActivity" android:theme="@style/activityTheme"/>
+        <activity android:name=".PluginFunctionActivity" android:theme="@style/activityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

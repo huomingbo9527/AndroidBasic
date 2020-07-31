@@ -10,6 +10,7 @@ import com.huo.androidbasicstudy.activity.plugin.util.PluginAPKProvider;
 import com.huo.androidbasicstudy.util.ReflectUtil;
 import java.io.File;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import dalvik.system.BaseDexClassLoader;
 import dalvik.system.DexClassLoader;
@@ -82,6 +83,7 @@ public class PluginHelper {
         addAssetPath.invoke(assetManager,pluginFile.getParent());
         sPluginResources = new Resources(assetManager,context.getResources().getDisplayMetrics(), context.getResources().getConfiguration());
     }
+
 
     public static Resources getPluginResources() {
         return sPluginResources;

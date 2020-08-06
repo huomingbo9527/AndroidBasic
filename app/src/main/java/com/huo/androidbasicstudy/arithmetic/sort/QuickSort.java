@@ -1,5 +1,6 @@
 package com.huo.androidbasicstudy.arithmetic.sort;
 
+//快速排序
 public class QuickSort {
 
     public static void quickSortHuo(int[] arr,int n){

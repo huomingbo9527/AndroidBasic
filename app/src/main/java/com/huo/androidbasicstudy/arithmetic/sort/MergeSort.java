@@ -1,5 +1,6 @@
 package com.huo.androidbasicstudy.arithmetic.sort;
 
+//归并排序
 public class MergeSort {
 
     public static void mergeSortHuo(int[] arr,int n){

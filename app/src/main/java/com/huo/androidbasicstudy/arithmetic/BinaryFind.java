@@ -1,6 +1,6 @@
 package com.huo.androidbasicstudy.arithmetic;
 
-public class BinarySort {
+public class BinaryFind {
     public static int binarySort(int[] arr,int n,int value){
         return binaryInternalSort(arr,0,n -1,1);
     }

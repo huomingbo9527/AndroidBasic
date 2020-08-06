@@ -1,8 +1,6 @@
 package com.huo.androidbasicstudy.arithmetic.link
 
-import com.huo.androidbasicstudy.arithmetic.BinarySort
-import com.huo.androidbasicstudy.arithmetic.sort.MergeSort
-import com.huo.androidbasicstudy.arithmetic.sort.QuickSort
+import com.huo.androidbasicstudy.arithmetic.BinaryFind
 import com.huo.androidbasicstudy.arithmetic.sort.Sort
 
 
@@ -22,7 +20,7 @@ class LinkOperation {
 //            QuickSort.quickSortHuo(Sort.arr,Sort.arr.size)
 //            Sort.printAll(Sort.arr)
 
-            println(BinarySort.binaryInternalSortWhile(Sort.arr,Sort.arr.size,1))
+            println(BinaryFind.binaryInternalSortWhile(Sort.arr,Sort.arr.size,1))
 //            Sort.printAll(Sort.insert(Sort.arr))
         }
     }

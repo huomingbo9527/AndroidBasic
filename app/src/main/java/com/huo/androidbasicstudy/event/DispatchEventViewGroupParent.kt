@@ -25,12 +25,16 @@ class DispatchEventViewGroupParent @JvmOverloads constructor(
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}  onInterceptTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
+//        if(ev?.action == MotionEvent.ACTION_MOVE){//测试子view获取到事件，父View拦截事件效果
+//            return true
+//        }
         return super.onInterceptTouchEvent(ev)
     }
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
         logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}  onTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
-        return super.onTouchEvent(ev)
+//        return super.onTouchEvent(ev)
+        return true
     }
 
 }

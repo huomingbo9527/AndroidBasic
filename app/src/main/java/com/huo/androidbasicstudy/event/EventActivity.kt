@@ -64,10 +64,11 @@ class EventActivity : AppCompatActivity() {
         val displayMetrics = resources.displayMetrics
         val density = displayMetrics.density
         val withChild = displayMetrics.widthPixels
-        val heightChild = displayMetrics.heightPixels /8
+        val heightChild = displayMetrics.heightPixels /6
 
         /**
-         *  dispatchTouchEvent 返回true   不执行该ViewGroup的onInterceptTouchEvent、onTouchEvent，子view当然也获取不到事件，外部view如果不拦截的话，调用流程activity -> parent -> 该view的dispatchTouchEvent
+         *  dispatchTouchEvent 返回true   不执行该ViewGroup的onInterceptTouchEvent、onTouchEvent，子view当然也获取不到事件，外部view如果不拦截的话，调用流程activity -> parent -> 该view的dispatchTouchEvent，如果上层ViewGroup拦击了move事件，move事件就被上层ViewGroup消费，上层viewGroup第一此拦截该View的move事件，该View会收到dispatchTouchEvent的cancel事件
+         *
         2020-08-06 13:01:25.523 29142-29142/com.huo.androidbasicstudy V/eventDispatchTest: EventActivity   dispatchTouchEvent  dispatchTouchEvent     0
         2020-08-06 13:01:25.525 29142-29142/com.huo.androidbasicstudy V/eventDispatchTest: DispatchEventViewGroupParent   dispatchTouchEvent  dispatchTouchEvent     0
         2020-08-06 13:01:25.525 29142-29142/com.huo.androidbasicstudy V/eventDispatchTest: DispatchEventViewGroupParent  onInterceptTouchEvent  onInterceptTouchEvent     0
@@ -87,11 +88,12 @@ class EventActivity : AppCompatActivity() {
          */
         val dispatchTrueEventViewGroup = DispatchTrueEventViewGroup(this)
         dispatchTrueEventViewGroup.setBackgroundColor(ContextCompat.getColor(applicationContext,R.color.colorAccent))
-        dispatchTrueEventViewGroup.addView(DispatchTrueEventView(this),withChild,heightChild)
+        val dispatchTrueEventView = DispatchTrueEventView(this)
+        dispatchTrueEventViewGroup.addView(dispatchTrueEventView,withChild,heightChild)
         val dispatchEventViewGroupTrueBody = DispatchEventViewGroupParent(this)
         dispatchEventViewGroupTrueBody.addView(dispatchTrueEventViewGroup,withChild,heightChild)
         eventBaseBody.addView(dispatchEventViewGroupTrueBody,withChild,heightChild)
-
+        dispatchTrueEventView.post { dispatchTrueEventView.setShowContent("dispatchTouchEvent 返回true   不执行该ViewGroup的onInterceptTouchEvent、onTouchEvent，子view当然也获取不到事件，外部view如果不拦截的话，调用流程activity -> parent -> 该view的dispatchTouchEvent，如果上层ViewGroup拦击了move事件，move事件就被上层ViewGroup消费，并且上层viewGroup第一此拦截该View的move事件，该View会收到dispatchTouchEvent的cancel事件\n") }
         /**
          * dispatchTouchEvent 返回false  不执行该ViewGroup的onInterceptTouchEvent、onTouchEvent，子view当然也获取不到事件  事件返回:外层view回调onTouchEvent,如果都不处理最终由activity onTouchEvent事件处理
          * 执行activity  onTouchEvent dispatchTouchEvent onTouchEvent ...  事件都没有处理最终要activity来处理事件
@@ -112,23 +114,33 @@ class EventActivity : AppCompatActivity() {
          */
         val dispatchFalseEventViewGroup = DispatchFalseEventViewGroup(this)
         dispatchFalseEventViewGroup.setBackgroundColor(ContextCompat.getColor(applicationContext,R.color.colorPrimary))
-        dispatchFalseEventViewGroup.addView(DispatchTrueEventView(this),withChild,heightChild)
+        val dispatchTrueEventViewFalse = DispatchTrueEventView(this)
+        dispatchFalseEventViewGroup.addView(dispatchTrueEventViewFalse,withChild,heightChild)
         val dispatchEventViewGroup = DispatchEventViewGroupParent(this)
         dispatchEventViewGroup.addView(dispatchFalseEventViewGroup,withChild,heightChild)
         eventBaseBody.addView(dispatchEventViewGroup,withChild,heightChild)
+        dispatchTrueEventViewFalse.post { dispatchTrueEventViewFalse.setShowContent("dispatchTouchEvent 返回false  不执行该ViewGroup的onInterceptTouchEvent、onTouchEvent，子view当然也获取不到事件  事件返回:外层view回调onTouchEvent,如果都不处理最终由activity onTouchEvent事件处理\n" +
+                "         * 执行activity  onTouchEvent dispatchTouchEvent onTouchEvent ...  事件都没有处理最终要activity来处理事件") }
+
 
         /**
          * dispatchTouchEvent
-         * 1,该view返回super,子view返回true,同该view返回true是一样的，
-         * 2,该view返回super,子view返回false和该view返回的false是一个效果，
-         * 3,该view返回super,子view返回super的话，默认是返回activity处理onTouch事件
+         * 1,该view返回super,子view dispatchTouchEvent 返回true,同该view返回true是一样的，
+         * 2,该view返回super,子view dispatchTouchEvent 返回false和该view返回的false是一个效果，
+         * 3,该view返回super,子view dispatchTouchEvent 返回super的话，默认是返回activity处理onTouch事件
          */
         val dispatchSuperEventViewGroup = DispatchSuperEventViewGroup(this)
         dispatchSuperEventViewGroup.setBackgroundColor(ContextCompat.getColor(applicationContext,R.color.colorPrimaryDark))
-        dispatchSuperEventViewGroup.addView(DispatchTrueEventView(this),withChild,heightChild)
+        val dispatchTrueEventViewSon = DispatchTrueEventView(this)
+        dispatchSuperEventViewGroup.addView(dispatchTrueEventViewSon,withChild,heightChild)
         val dispatchEventViewGroupParent = DispatchEventViewGroupParent(this)
         dispatchEventViewGroupParent.addView(dispatchSuperEventViewGroup,withChild,heightChild)
         eventBaseBody.addView(dispatchEventViewGroupParent,withChild,heightChild)
+        dispatchTrueEventViewSon.post { dispatchTrueEventViewSon.setShowContent("dispatchTouchEvent\n" +
+                "         * 1,该view返回super,子view dispatchTouchEvent 返回true,同该view返回true是一样的，\n" +
+                "         * 2,该view返回super,子view dispatchTouchEvent 返回false和该view返回的false是一个效果，\n" +
+                "         * 3,该view返回super,子view dispatchTouchEvent 返回super的话，默认是返回activity处理onTouch事件") }
+
 
         /**
          * dispatchTouchEvent 没有View,嵌套全是ViewGroup
@@ -143,6 +155,10 @@ class EventActivity : AppCompatActivity() {
         /**
          * onInterceptTouchEvent
          * 返回true    onTouchEvent()返回super false  事件不处理 最终activity处理事件
+         * activity消费事件的原理也在ViewGroup中，没有view消费事件，当move事件时候，mFirstTouchTarget == null 所以在DecorView的时候就调用自己的父类View的dispatchTouchEvent处理事件，不向下分发了最终调用了
+         * activity的事件回调
+         * 理解为down事件会递归遍历子view看看是否有事件消费，如果最终没有消费，在move事件也是同样会分发只不过在DecorView就返回了，最终执行activity的onTouch()方法。
+         *
          *
         2020-08-06 14:31:23.922 32089-32089/com.huo.androidbasicstudy V/eventDispatchTest: DispatchEventViewGroupParent   dispatchTouchEvent  dispatchTouchEvent     0
         2020-08-06 14:31:23.923 32089-32089/com.huo.androidbasicstudy V/eventDispatchTest: DispatchEventViewGroupParent  onInterceptTouchEvent  onInterceptTouchEvent     0
@@ -178,11 +194,17 @@ class EventActivity : AppCompatActivity() {
          */
         val interceptTrueEventViewGroup = InterceptTrueEventViewGroup(this)
         interceptTrueEventViewGroup.setBackgroundColor(ContextCompat.getColor(applicationContext,R.color.colorPrimaryDark))
-        interceptTrueEventViewGroup.addView(DispatchTrueEventView(this),withChild,heightChild)
+        val dispatchTrueEventViewInter = DispatchTrueEventView(this)
+        interceptTrueEventViewGroup.addView(dispatchTrueEventViewInter.setShowContent("onInterceptTouchEvent 返回true onTouch是否返回true"),withChild,heightChild)
         val dispatchEventViewGroupParentInter = DispatchEventViewGroupParent(this)
         dispatchEventViewGroupParentInter.addView(interceptTrueEventViewGroup,withChild,heightChild)
         eventBaseBody.addView(dispatchEventViewGroupParentInter,withChild,heightChild)
-
+        dispatchTrueEventViewInter.post { dispatchTrueEventViewInter.setShowContent("* onInterceptTouchEvent\n" +
+                "         * 返回true    onTouchEvent()返回super false  事件不处理 最终activity处理事件" +
+                "         * activity消费事件的原理也在ViewGroup中，没有view消费事件，当move事件时候，mFirstTouchTarget == null 所以在DecorView的时候就调用自己的父类View的dispatchTouchEvent处理事件，不向下分发了最终调用了\n" +
+                "         * activity的事件回调  " +
+                "         * 理解为down事件会递归遍历子view看看是否有事件消费，如果最终没有消费，在move事件也是同样会分发只不过在DecorView就返回了，最终执行activity的onTouch()方法。\n" +
+                "         *") }
 
         /**
          * onTouch
@@ -212,22 +234,31 @@ class EventActivity : AppCompatActivity() {
          */
         val interceptFalseEventViewGroup = InterceptFalseEventViewGroup(this)
         interceptFalseEventViewGroup.setBackgroundColor(ContextCompat.getColor(applicationContext,R.color.colorAccent))
-        interceptFalseEventViewGroup.addView(TouchTrueEventView(this),withChild,heightChild)
+        val touchTrueEventView = TouchTrueEventView(this)
+        interceptFalseEventViewGroup.addView(touchTrueEventView,withChild,heightChild)
         val dispatchEventViewGroupParentInterFalse = DispatchEventViewGroupParent(this)
         dispatchEventViewGroupParentInterFalse.addView(interceptFalseEventViewGroup,withChild,heightChild)
         eventBaseBody.addView(dispatchEventViewGroupParentInterFalse,withChild,heightChild)
-
+        touchTrueEventView.post {  touchTrueEventView.setShowContent("onTouch 返回true 消费事件") }
 
     }
 
-
+    /**
+     *
+     * activity消费事件的原理也在ViewGroup中，没有view消费事件，当move事件时候，mFirstTouchTarget == null 所以在DecorView的时候就调用自己的父类View的dispatchTouchEvent处理事件，
+     * 不向下分发了,最终调用了activity的事件回调.
+     * 理解为down事件会递归遍历子view看看是否有事件消费，如果最终没有消费，在move事件也是同样会分发只不过在DecorView就返回了，最终执行activity的onTouch()方法。
+     */
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}   dispatchTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
+        logV(eventDispatchTextTag,"${this.javaClass.simpleName}   dispatchTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
+        if(ev?.action == 2){
+            var c = this.javaClass.simpleName
+        }
         return super.dispatchTouchEvent(ev)
     }
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
-        logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}   dispatchTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
+        logV(eventDispatchTextTag,"${this.javaClass.simpleName}   dispatchTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
         return super.onTouchEvent(ev)
     }
 

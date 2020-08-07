@@ -1,15 +1,22 @@
 package com.huo.androidbasicstudy.event
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.huo.androidbasicstudy.util.logV
 
+
 class TouchTrueEventView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
+    private val paint = TextPaint()
+    var content: String = ""
     /***
      * ViewGroup::dispatchTouchEvent()  事件分发()
      * onInterceptTouchEvent()
@@ -33,4 +40,27 @@ class TouchTrueEventView @JvmOverloads constructor(
         return true
     }
 
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        paint.color = Color.WHITE
+        paint.textSize = 30f
+        val myStaticLayout = StaticLayout(
+            content,
+            paint,
+            canvas!!.width,
+            Layout.Alignment.ALIGN_NORMAL,
+            1.0f,
+            0.0f,
+            false
+        )
+        myStaticLayout.draw(canvas)
+//        canvas.restore()
+//        canvas.drawText(content,50f,50f,paint)
+    }
+
+    fun setShowContent(content:String) : TouchTrueEventView{
+        this.content = content
+        invalidate()
+        return this@TouchTrueEventView
+    }
 }

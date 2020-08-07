@@ -31,9 +31,9 @@ class InterceptFalseEventViewGroup @JvmOverloads constructor(
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
         logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}  onTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
-//        return super.onTouchEvent(ev)  //不处理 事件最终回到activity
+        return super.onTouchEvent(ev)  //不处理 事件最终回到activity
 //        return false   //不处理 事件最终回到activity
-        return true   //处理  onInterceptTouchEvent拦截后   onInterceptTouchEvent方法不在执行
+//        return true   //处理  onInterceptTouchEvent拦截后   onInterceptTouchEvent方法不在执行
     }
 
 

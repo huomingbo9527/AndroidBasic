@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sang.refrush.NestedScrollingScaleParent2Layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.sang.refrush.NestedScrollingChild2View
-        android:id="@+id/iv_head_image"
+<!--    com.huo.nest.NestedScrollingParent2Layout-->
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="#abcdef">
-
-        <TextView
-            android:background="@mipmap/img_head"
+        android:layout_height="wrap_content">
+        <com.huo.nest.NestedScrollingChild2View
+            android:id="@+id/iv_head_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#333333" />
+            android:layout_height="300dp"
+            android:background="#abcdef">
 
-    </com.sang.refrush.NestedScrollingChild2View>
+            <TextView
+                android:background="@mipmap/img_head"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#333333" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        </com.huo.nest.NestedScrollingChild2View>
 
-    <com.sang.refrush.NestedScrollingChild2View
-        android:id="@+id/iv_foot_image"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="#abcdef">
-
-        <TextView
-            android:background="@mipmap/img_head"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#333333" />
+            android:layout_height="match_parent" />
 
-    </com.sang.refrush.NestedScrollingChild2View>
+        <com.huo.nest.NestedScrollingChild2View
+            android:id="@+id/iv_foot_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#abcdef">
 
-</com.sang.refrush.NestedScrollingScaleParent2Layout>
+            <TextView
+                android:background="@mipmap/img_head"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#333333" />
+
+        </com.huo.nest.NestedScrollingChild2View>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

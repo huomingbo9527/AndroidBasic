@@ -1,12 +1,10 @@
-package com.sang.refrush;
+package com.huo.nest;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.NestedScrollingParent2;
@@ -14,14 +12,14 @@ import androidx.core.view.NestedScrollingParentHelper;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sang.refrush.utils.FRLog;
+import com.huo.nest.utils.FRLog;
 
 import java.lang.reflect.Field;
 
 
 public class NestedScrollingScaleParent2Layout extends LinearLayout implements NestedScrollingParent2 {
 
-    private String TAG="NestedScrollingScaleParent2Layout";
+    private String TAG = "NestedScrollingScaleParent2Layout";
 
     private View mTopView;
     private View mContentView;
@@ -66,7 +64,7 @@ public class NestedScrollingScaleParent2Layout extends LinearLayout implements N
         if (mContentView != null && mContentView instanceof RecyclerView) {
             ((RecyclerView) mContentView).stopScroll();
         }
-        mTopView.stopNestedScroll();
+//        mTopView.stopNestedScroll();
         return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 

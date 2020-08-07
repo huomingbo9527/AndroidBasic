@@ -1,9 +1,9 @@
-package com.sang.refrush.adapter;
+package com.huo.nest.adapter;
 
 import android.view.ViewGroup;
 
-import com.sang.refrush.holder.BaseHolder;
-import com.sang.refrush.holder.PeakHolder;
+import com.huo.nest.holder.BaseHolder;
+import com.huo.nest.holder.PeakHolder;
 
 import java.util.List;
 

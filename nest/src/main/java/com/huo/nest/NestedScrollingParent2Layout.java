@@ -1,4 +1,4 @@
-package com.sang.refrush;
+package com.huo.nest;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,7 +13,7 @@ import androidx.core.view.NestedScrollingParentHelper;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sang.refrush.utils.FRLog;
+import com.huo.nest.utils.FRLog;
 
 
 
@@ -144,6 +144,15 @@ public class NestedScrollingParent2Layout extends LinearLayout implements Nested
 
     }
 
+    @Override
+    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
+        return super.onNestedPreFling(target, velocityX, velocityY);
+    }
+
+    @Override
+    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+        return super.onNestedFling(target, velocityX, velocityY, consumed);
+    }
 
     /**
      * 停止滑动

@@ -1,4 +1,4 @@
-package com.sang.refrush;
+package com.huo.nest;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,14 +6,13 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
+import android.widget.OverScroller;
 import android.widget.Scroller;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.NestedScrollingChild2;
 import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.ViewCompat;
-
-import com.sang.refrush.utils.FRLog;
 
 import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
@@ -25,7 +24,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
     private NestedScrollingChildHelper mScrollingChildHelper = new NestedScrollingChildHelper(this);
     private final int mMinFlingVelocity;
     private final int mMaxFlingVelocity;
-    private Scroller mScroller;
+    private OverScroller mScroller;
     private int lastY = -1;
     private int lastX = -1;
     private int[] offset = new int[2];
@@ -52,7 +51,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
         ViewConfiguration vc = ViewConfiguration.get(context);
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();
         mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
-        mScroller = new Scroller(context);
+        mScroller = new OverScroller(context);
     }
 
 
@@ -145,6 +144,17 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
         return mScrollingChildHelper.hasNestedScrollingParent(type);
     }
 
+    @Override
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+        return mScrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY);
+    }
+
+    @Override
+    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+        return mScrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
+
+
 
     private VelocityTracker mVelocityTracker;
 
@@ -205,19 +215,40 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
 
             case MotionEvent.ACTION_UP:  //当手指抬起的时，结束嵌套滑动传递,并判断是否产生了fling效果
             case MotionEvent.ACTION_CANCEL:  //取消的时候，结束嵌套滑动传递,并判断是否产生了fling效果
+
+//                //开始判断是否需要惯性滑动
+//                mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
+//                int xvel = (int) mVelocityTracker.getXVelocity();
+//                int yvel = (int) mVelocityTracker.getYVelocity();
+//                fling(xvel, yvel);
+//                if (mVelocityTracker != null) {
+//                    mVelocityTracker.clear();
+//                }
+//                lastY = -1;
+//                lastX = -1;
+
+                final VelocityTracker velocityTracker = mVelocityTracker;
+                velocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
+                int initialVelocity = (int) velocityTracker.getYVelocity();
+                if ((Math.abs(initialVelocity) > mMinFlingVelocity)) {
+                    if (!dispatchNestedPreFling(0, -initialVelocity)) {
+                        dispatchNestedFling(0, -initialVelocity, false);
+                        mScroller.fling(getScrollX(), getScrollY(), // start
+                                0, initialVelocity, // velocities
+                                0, 0, // x
+                                Integer.MIN_VALUE, Integer.MAX_VALUE, // y
+                                0, 0); // overscroll
+                        ViewCompat.postInvalidateOnAnimation(this);
+                    }
+                }
+
+//                else if (mScroller.springBack(getScrollX(), getScrollY(), 0, 0, 0,
+//                        getScrollRange())) {
+//                    ViewCompat.postInvalidateOnAnimation(this);
+//                }
+
                 //触摸滑动停止
                 stopNestedScroll(TYPE_TOUCH);
-
-                //开始判断是否需要惯性滑动
-                mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
-                int xvel = (int) mVelocityTracker.getXVelocity();
-                int yvel = (int) mVelocityTracker.getYVelocity();
-                fling(xvel, yvel);
-                if (mVelocityTracker != null) {
-                    mVelocityTracker.clear();
-                }
-                lastY = -1;
-                lastX = -1;
                 break;
 
 
@@ -268,7 +299,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
 
     @Override
     public void computeScroll() {
-        if (mScroller.computeScrollOffset() && fling) {
+        if (mScroller.computeScrollOffset() ) {//&& fling
             int x = mScroller.getCurrX();
             int y = mScroller.getCurrY();
             int dx = mLastFlingX - x;
@@ -306,7 +337,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
     }
 
     private void cancleFling() {
-        fling = false;
+//        fling = false;
         mLastFlingX = 0;
         mLastFlingY = 0;
     }

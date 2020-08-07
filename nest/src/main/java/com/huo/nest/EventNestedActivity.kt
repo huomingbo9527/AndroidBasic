@@ -1,21 +1,23 @@
-package com.sang.refrush
+package com.huo.nest
 
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener
-import com.sang.refrush.adapter.XAdapter
-import com.sang.refrush.holder.BaseHolder
-import com.sang.refrush.utils.DividerGridItemDecoration
-import com.sang.refrush.utils.FRLog
+import com.huo.nest.adapter.XAdapter
+import com.huo.nest.holder.BaseHolder
+import com.huo.nest.utils.DividerGridItemDecoration
+import com.huo.nest.utils.FRLog
 import java.util.*
 
 class EventNestedActivity : AppCompatActivity() {
     private var recyclerView : RecyclerView? = null
+    private var nestedScrollView : NestedScrollView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event_nested)

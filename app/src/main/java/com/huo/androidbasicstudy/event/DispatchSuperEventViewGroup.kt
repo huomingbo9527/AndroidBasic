@@ -55,6 +55,9 @@ class DispatchSuperEventViewGroup @JvmOverloads constructor(
      */
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}   dispatchTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
+        if(ev?.action == MotionEvent.ACTION_DOWN){
+            parent.requestDisallowInterceptTouchEvent(true)
+        }
         return super.dispatchTouchEvent(ev)
     }
 
@@ -65,7 +68,8 @@ class DispatchSuperEventViewGroup @JvmOverloads constructor(
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
         logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}  onTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
-        return super.onTouchEvent(ev)
+        return true
+//        return super.onTouchEvent(ev)
     }
 
 }

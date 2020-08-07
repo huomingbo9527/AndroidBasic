@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.huo.androidbasicstudy.R
 import com.huo.androidbasicstudy.util.logV
 import kotlinx.android.synthetic.main.activity_event.*
@@ -65,6 +66,8 @@ class EventActivity : AppCompatActivity() {
         val density = displayMetrics.density
         val withChild = displayMetrics.widthPixels
         val heightChild = displayMetrics.heightPixels /6
+        val r : RecyclerView? = null
+
 
         /**
          *  dispatchTouchEvent 返回true   不执行该ViewGroup的onInterceptTouchEvent、onTouchEvent，子view当然也获取不到事件，外部view如果不拦截的话，调用流程activity -> parent -> 该view的dispatchTouchEvent，如果上层ViewGroup拦击了move事件，move事件就被上层ViewGroup消费，上层viewGroup第一此拦截该View的move事件，该View会收到dispatchTouchEvent的cancel事件

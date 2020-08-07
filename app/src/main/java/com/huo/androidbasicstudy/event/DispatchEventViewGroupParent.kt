@@ -33,8 +33,8 @@ class DispatchEventViewGroupParent @JvmOverloads constructor(
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
         logV(EventActivity.eventDispatchTextTag,"${this.javaClass.simpleName}  onTouchEvent  ${EventActivity.getExecutingMethodName()}     ${ev?.action}")
-//        return super.onTouchEvent(ev)
-        return true
+        return super.onTouchEvent(ev)
+//        return true
     }
 
 }

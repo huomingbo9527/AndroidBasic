@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sang.refrush.NestedScrollingScaleParent2Layout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.sang.refrush.NestedScrollingChild2View
+        android:id="@+id/iv_head_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#abcdef">
+
+        <TextView
+            android:background="@mipmap/img_head"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#333333" />
+
+    </com.sang.refrush.NestedScrollingChild2View>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.sang.refrush.NestedScrollingChild2View
+        android:id="@+id/iv_foot_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#abcdef">
+
+        <TextView
+            android:background="@mipmap/img_head"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#333333" />
+
+    </com.sang.refrush.NestedScrollingChild2View>
+
+</com.sang.refrush.NestedScrollingScaleParent2Layout>

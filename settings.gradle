@@ -3,4 +3,5 @@ include ':rxjava'
 //include ':dragger'
 //include ':Service'
 include ':app'
+include ':nest'
 rootProject.name = "AndroidBasicStudy"

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.huo.nest.holder.BaseHolder;
 import com.huo.nest.holder.PeakHolder;
+import com.huo.nest.utils.FRLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +128,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        FRLog.d("onBindViewHolder:  position=" + position );
 
         int viewType = getItemViewType(position);
         if (viewType >= FOOTTYPE) {//脚布局

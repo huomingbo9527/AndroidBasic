@@ -7,12 +7,13 @@ import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.OverScroller;
-import android.widget.Scroller;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.NestedScrollingChild2;
 import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.ViewCompat;
+
+import com.huo.nest.utils.FRLog;
 
 import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
@@ -21,6 +22,7 @@ import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 public class NestedScrollingChild2View extends LinearLayout implements NestedScrollingChild2 {
 
 
+    private final int mTouchSlop;
     private NestedScrollingChildHelper mScrollingChildHelper = new NestedScrollingChildHelper(this);
     private final int mMinFlingVelocity;
     private final int mMaxFlingVelocity;
@@ -29,9 +31,11 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
     private int lastX = -1;
     private int[] offset = new int[2];
     private int[] consumed = new int[2];
+
+    private final int[] mNestedOffsets = new int[2];
     private int mOrientation;
     private boolean fling;//判断当前是否是可以进行惯性滑动
-
+    private int mScrollPointerId;
 
 
     public NestedScrollingChild2View(Context context) {
@@ -52,6 +56,8 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();
         mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
         mScroller = new OverScroller(context);
+        final ViewConfiguration configuration = ViewConfiguration.get(getContext());
+        mTouchSlop = configuration.getScaledTouchSlop();
     }
 
 
@@ -65,6 +71,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
      */
     @Override
     public boolean startNestedScroll(int axes, int type) {
+        if(!isNest) return false;
         return mScrollingChildHelper.startNestedScroll(axes, type);
     }
 
@@ -83,6 +90,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
      */
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, @Nullable int[] consumed, @Nullable int[] offsetInWindow, int type) {
+        if(!isNest) return  false;
         return mScrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
     }
 
@@ -104,6 +112,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
      */
     @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, @Nullable int[] offsetInWindow, int type) {
+        if(!isNest) return false;
         return mScrollingChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type);
     }
 
@@ -114,6 +123,7 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
      */
     @Override
     public void stopNestedScroll(int type) {
+        if(!isNest) return;
         mScrollingChildHelper.stopNestedScroll(type);
     }
 
@@ -159,143 +169,113 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
     private VelocityTracker mVelocityTracker;
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+        mVelocityTracker.addMovement(ev);
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
-        cancleFling();//停止惯性滑动
-        if (lastX == -1 || lastY == -1) {
-            lastY = (int) event.getRawY();
-            lastX = (int) event.getRawX();
-        }
+//        if (lastX == -1 || lastY == -1) {
+//            lastY = (int) event.getRawY();
+//            lastX = (int) event.getRawX();
+//        }
 
         //添加速度检测器，用于处理fling效果
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
-        mVelocityTracker.addMovement(event);
 
+        if (action == MotionEvent.ACTION_DOWN) {
+            mNestedOffsets[0] = mNestedOffsets[1] = 0;
+        }
+        final MotionEvent vtev = MotionEvent.obtain(event);
+        vtev.offsetLocation(mNestedOffsets[0], mNestedOffsets[1]);
+
+        mVelocityTracker.addMovement(vtev);
         switch (action) {
             case MotionEvent.ACTION_DOWN: {//当手指按下
-                lastY = (int) event.getRawY();
-                lastX = (int) event.getRawX();
+                mScrollPointerId = event.getPointerId(0);
+                lastY = (int) event.getY();
+                lastX = (int) event.getX();
                 //即将开始滑动，支持垂直方向的滑动
-                if (mOrientation == VERTICAL) {
-                    //此方法确定开始滑动的方向和类型，为垂直方向，触摸滑动
-                    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
-                } else {
-                    startNestedScroll(ViewCompat.SCROLL_AXIS_HORIZONTAL, TYPE_TOUCH);
-
-                }
+                //此方法确定开始滑动的方向和类型，为垂直方向，触摸滑动
+                stopScroll();
+                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
                 break;
             }
             case MotionEvent.ACTION_MOVE://当手指滑动
-                int currentY = (int) (event.getRawY());
-                int currentX = (int) (event.getRawX());
+                int currentY = (int) (event.getY());
+
                 int dy = lastY - currentY;
-                int dx = lastX - currentX;
+//                if (dy > 0) {
+//                    dy = Math.max(0, dy - mTouchSlop);
+//                } else {
+//                    dy = Math.min(0, dy + mTouchSlop);
+//                }
+                FRLog.d("onTouchEvent ACTION_MOVE:  currentY=" + currentY + "   dy=" +dy);
+
                 //即将开始滑动，在开始滑动前，先通知父控件，确认父控件是否需要先消耗一部分滑动
                 //true 表示需要先消耗一部分
-                if (dispatchNestedPreScroll(dx, dy, consumed, offset, TYPE_TOUCH)) {
+                if (dispatchNestedPreScroll(0, dy, consumed, offset, TYPE_TOUCH)) {
                     //如果父控件需要消耗，则处理父控件消耗的部分数据
                     dy -= consumed[1];
-                    dx -= consumed[0];
+                    mNestedOffsets[0] += offset[0];
+                    mNestedOffsets[1] += offset[1];
                 }
                 //剩余的自己再次消耗，
                 int consumedX = 0, consumedY = 0;
                 if (mOrientation == VERTICAL) {
                     consumedY = childConsumedY(dy);
                 } else {
-                    consumedX = childConsumeX(dx);
+                    consumedX = childConsumeX(0);
                 }
                 //子控件的滑动事件处理完成之后，剩余的再次传递给父控件，让父控件进行消耗
                 //因为没有滑动事件，因此次数自己滑动距离为0，剩余的再次全部还给父控件
-                dispatchNestedScroll(consumedX, consumedY, dx - consumedX, dy - consumedY, null, TYPE_TOUCH);
-                lastY = currentY;
-                lastX = currentX;
+                dispatchNestedScroll(consumedX, consumedY,  - consumedX, dy - consumedY, null, TYPE_TOUCH);
+                lastY = currentY - offset[1];
                 break;
 
             case MotionEvent.ACTION_UP:  //当手指抬起的时，结束嵌套滑动传递,并判断是否产生了fling效果
             case MotionEvent.ACTION_CANCEL:  //取消的时候，结束嵌套滑动传递,并判断是否产生了fling效果
 
-//                //开始判断是否需要惯性滑动
-//                mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
-//                int xvel = (int) mVelocityTracker.getXVelocity();
-//                int yvel = (int) mVelocityTracker.getYVelocity();
-//                fling(xvel, yvel);
-//                if (mVelocityTracker != null) {
-//                    mVelocityTracker.clear();
-//                }
-//                lastY = -1;
-//                lastX = -1;
+                stopNestedScroll(TYPE_TOUCH);
+                //通知父控件，开始进行惯性滑动
+                //此方法确定开始滑动的方向和类型，为垂直方向，触摸滑动
+                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
 
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 velocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
-                int initialVelocity = (int) velocityTracker.getYVelocity();
-                if ((Math.abs(initialVelocity) > mMinFlingVelocity)) {
-                    if (!dispatchNestedPreFling(0, -initialVelocity)) {
-                        dispatchNestedFling(0, -initialVelocity, false);
-                        mScroller.fling(getScrollX(), getScrollY(), // start
+                int initialVelocity = (int) velocityTracker.getYVelocity(mScrollPointerId);
+                FRLog.d("onTouchEvent:  initialVelocity = " + initialVelocity);
+                if ((Math.abs(initialVelocity) > mMinFlingVelocity) && isNest) {
+                    mScroller.fling(0, 0, // start
                                 0, initialVelocity, // velocities
                                 0, 0, // x
                                 Integer.MIN_VALUE, Integer.MAX_VALUE, // y
                                 0, 0); // overscroll
                         ViewCompat.postInvalidateOnAnimation(this);
-                    }
                 }
-
-//                else if (mScroller.springBack(getScrollX(), getScrollY(), 0, 0, 0,
-//                        getScrollRange())) {
-//                    ViewCompat.postInvalidateOnAnimation(this);
-//                }
-
+                resetScroll();
                 //触摸滑动停止
-                stopNestedScroll(TYPE_TOUCH);
                 break;
-
-
         }
-
         return true;
     }
 
-    private boolean fling(int velocityX, int velocityY) {
-        //判断速度是否足够大。如果够大才执行fling
-        if (Math.abs(velocityX) < mMinFlingVelocity) {
-            velocityX = 0;
+    private void resetScroll() {
+        if (mVelocityTracker != null) {
+            mVelocityTracker.clear();
         }
-        if (Math.abs(velocityY) < mMinFlingVelocity) {
-            velocityY = 0;
-        }
-        if (velocityX == 0 && velocityY == 0) {
-            return false;
-        }
-        //通知父控件，开始进行惯性滑动
-        if (mOrientation == VERTICAL) {
-            //此方法确定开始滑动的方向和类型，为垂直方向，触摸滑动
-            startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
-        } else {
-            startNestedScroll(ViewCompat.SCROLL_AXIS_HORIZONTAL, ViewCompat.TYPE_NON_TOUCH);
-        }
-
-        velocityX = Math.max(-mMaxFlingVelocity, Math.min(velocityX, mMaxFlingVelocity));
-        velocityY = Math.max(-mMaxFlingVelocity, Math.min(velocityY, mMaxFlingVelocity));
-        //开始惯性滑动
-        doFling(velocityX, velocityY);
-        return true;
-
+        stopNestedScroll(TYPE_TOUCH);
     }
-
     private int mLastFlingX;
     private int mLastFlingY;
     private final int[] mScrollConsumed = new int[2];
-
-    /**
-     * 实际的fling处理效果
-     */
-    private void doFling(int velocityX, int velocityY) {
-        fling = true;
-        mScroller.fling(0, 0, velocityX, velocityY, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
-        postInvalidate();
-    }
 
     @Override
     public void computeScroll() {
@@ -304,8 +284,10 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
             int y = mScroller.getCurrY();
             int dx = mLastFlingX - x;
             int dy = mLastFlingY - y;
+            FRLog.d("computeScroll:  dy = " + dy + "  mLastFlingY = " +mLastFlingY + "  y = " + y);
             mLastFlingX = x;
             mLastFlingY = y;
+
             //在子控件处理fling之前，先判断父控件是否消耗
             if (dispatchNestedPreScroll(dx, dy, mScrollConsumed, null, ViewCompat.TYPE_NON_TOUCH)) {
                 //计算父控件消耗后，剩下的距离
@@ -332,11 +314,22 @@ public class NestedScrollingChild2View extends LinearLayout implements NestedScr
             postInvalidate();
         } else {
             stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
-            cancleFling();
+            cancelFling();
         }
     }
 
-    private void cancleFling() {
+    /**
+     * 停止滑动
+     */
+    private void stopScroll() {
+        if(!isNest) return;
+        mScroller.abortAnimation();
+        stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
+        cancelFling();//停止惯性滑动
+    }
+    boolean isNest = true;
+
+    private void cancelFling() {
 //        fling = false;
         mLastFlingX = 0;
         mLastFlingY = 0;

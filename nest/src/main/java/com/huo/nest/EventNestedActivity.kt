@@ -24,12 +24,12 @@ class EventNestedActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         initView()
 
-        recyclerView?.onFlingListener = object : OnFlingListener() {
-            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
-                FRLog.e("---------onFling---------")
-                return false
-            }
-        }
+//        recyclerView?.onFlingListener = object : OnFlingListener() {
+//            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
+//                FRLog.e("---------onFling---------")
+//                return false
+//            }
+//        }
     }
 
     private fun initView() {
@@ -37,7 +37,7 @@ class EventNestedActivity : AppCompatActivity() {
         manager.orientation = RecyclerView.VERTICAL
         recyclerView?.layoutManager = manager
         val date: ArrayList<String> = ArrayList()
-        for (i in 0..49) {
+        for (i in 0..4) {
             date.add("我是数据$i")
         }
         recyclerView?.adapter = object : XAdapter<String>(this, date) {

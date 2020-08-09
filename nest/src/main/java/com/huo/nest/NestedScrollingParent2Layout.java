@@ -54,10 +54,11 @@ public class NestedScrollingParent2Layout extends LinearLayout implements Nested
      */
     @Override
     public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
+        //如果不停止RecyclerView ，RecyclerView滑倒低 马上触摸topView会不响应，原理待查
         if (mContentView != null && mContentView instanceof RecyclerView) {
             ((RecyclerView) mContentView).stopScroll();
         }
-        mTopView.stopNestedScroll();
+//        mTopView.stopNestedScroll();
         return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
@@ -89,33 +90,45 @@ public class NestedScrollingParent2Layout extends LinearLayout implements Nested
      */
     @Override
     public void onNestedPreScroll(@NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        //这里不管手势滚动还是fling都处理
+        FRLog.d("onNestedPreScroll:  dy = " + dy + "  type = " +type  + "  target = " + target);
         boolean hideTop = dy > 0 && getScrollY() < mTopViewHeight ;
         boolean showTop = dy < 0
                 && getScrollY() >= 0
                 && !target.canScrollVertically(-1)
                 && !mContentView.canScrollVertically(-1)
-                &&target!=mBottomView
-                ;
-        boolean cunsumedTop = hideTop || showTop;
+                && target!=mBottomView;
+        if(hideTop || showTop){
+            scrollBy(0, dy);
+            consumed[1] = dy;
+        }
 
+//        //这里不管手势滚动还是fling都处理
+//        boolean hideTop = dy > 0 && getScrollY() < mTopViewHeight ;
+//        boolean showTop = dy < 0
+//                && getScrollY() >= 0
+//                && !target.canScrollVertically(-1)
+//                && !mContentView.canScrollVertically(-1)
+//                &&target!=mBottomView
+//                ;
+//        boolean cunsumedTop = hideTop || showTop;
+//
         //对于底部布局
         boolean hideBottom = dy < 0 && getScrollY() > mTopViewHeight;
         boolean showBottom = dy > 0
                 && getScrollY() >= mTopViewHeight
                 && !target.canScrollVertically(1)
                 && !mContentView.canScrollVertically(1)
-                &&target!=mTopView
-                ;
+                && target!=mTopView;
         boolean cunsumedBottom = hideBottom || showBottom;
-
-        if (cunsumedTop) {
-            scrollBy(0, dy);
-            consumed[1] = dy;
-        } else if (cunsumedBottom) {
+        if(cunsumedBottom){
             scrollBy(0, dy);
             consumed[1] = dy;
         }
+//            scrollBy(0, dy);
+//            consumed[1] = dy;
+//        } else if (cunsumedBottom) {
+//            scrollBy(0, dy);
+//            consumed[1] = dy;
     }
 
 
@@ -134,24 +147,22 @@ public class NestedScrollingParent2Layout extends LinearLayout implements Nested
         if (dyUnconsumed<0){
             //对于向下滑动
             if (target == mBottomView){
-                mContentView.scrollBy(0, dyUnconsumed);
+                if(!mContentView.canScrollVertically(-1)){
+                    scrollBy(0, dyUnconsumed);
+                }else {
+                    mContentView.scrollBy(0, dyUnconsumed);
+                }
             }
         }else {
             if (target == mTopView){
-                mContentView.scrollBy(0, dyUnconsumed);
+                if(!mContentView.canScrollVertically(1)){
+                    scrollBy(0, dyUnconsumed);
+                }else {
+                    mContentView.scrollBy(0, dyUnconsumed);
+                }
             }
         }
 
-    }
-
-    @Override
-    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return super.onNestedPreFling(target, velocityX, velocityY);
-    }
-
-    @Override
-    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return super.onNestedFling(target, velocityX, velocityY, consumed);
     }
 
     /**
@@ -179,10 +190,15 @@ public class NestedScrollingParent2Layout extends LinearLayout implements Nested
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         //ViewPager修改后的高度= 总高度-导航栏高度
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        ViewGroup.LayoutParams layoutParams = mContentView.getLayoutParams();
-        layoutParams.height = getMeasuredHeight();
-        mContentView.setLayoutParams(layoutParams);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int height = mContentView.getHeight();
+        if( height >= getMeasuredHeight()){
+            ViewGroup.LayoutParams layoutParams = mContentView.getLayoutParams();
+            layoutParams.height = getMeasuredHeight();
+            mContentView.setLayoutParams(layoutParams);
+        }else{
+//            setMeasuredDimension(getMeasuredWidth(),height + mTopView.getHeight() + mBottomView.getHeight());
+
+        }
     }
 
     @Override

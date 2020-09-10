@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidBasicStudy</string>
+    <string name="android_compat_ten_content">android 10 适配</string>
+
 </resources>

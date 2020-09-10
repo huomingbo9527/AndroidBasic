@@ -2,6 +2,7 @@ package com.huo.androidbasicstudy.event
 
 import android.os.Bundle
 import android.view.MotionEvent
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -67,6 +68,7 @@ class EventActivity : AppCompatActivity() {
         val withChild = displayMetrics.widthPixels
         val heightChild = displayMetrics.heightPixels /6
         val r : RecyclerView? = null
+        val scrollView:ScrollView
 
 
         /**

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huo.nest.button.MyLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".button.TwoButtonEventActivity">
+    <com.huo.nest.button.Button1
+        android:text="button1"
+        android:onClick="onClick1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <com.huo.nest.button.Button2
+        android:layout_marginBottom="50dp"
+        android:text="button2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <com.huo.nest.button.TextView1
+        android:layout_marginBottom="50dp"
+        android:text="TextView1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+      />
+
+    <com.huo.nest.button.TextView2
+        android:id="@+id/text2"
+        android:layout_marginBottom="50dp"
+        android:text="TextView2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        />
+</com.huo.nest.button.MyLinearLayout>

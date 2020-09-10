@@ -3,7 +3,9 @@
     package="com.huo.nest">
 
     <application>
-        <activity android:name="com.huo.nest.EventNestedActivity"></activity>
+        <activity android:name=".button.TwoButtonEventActivity"></activity>
+        <activity android:name=".behavior.BehaviorTestActivity" />
+        <activity android:name=".EventNestedActivity" />
     </application>
 
 </manifest>

@@ -5,25 +5,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.CollapsibleActionView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnFlingListener
 import com.huo.nest.adapter.XAdapter
 import com.huo.nest.holder.BaseHolder
 import com.huo.nest.utils.DividerGridItemDecoration
-import com.huo.nest.utils.FRLog
 import java.util.*
 
 class EventNestedActivity : AppCompatActivity() {
     private var recyclerView : RecyclerView? = null
     private var nestedScrollView : NestedScrollView? = null
+    private var view :View? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event_nested)
         recyclerView = findViewById(R.id.recyclerView)
         initView()
 
+        var c :CoordinatorLayout? = null
+        var coll :CollapsibleActionView? = null
 //        recyclerView?.onFlingListener = object : OnFlingListener() {
 //            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
 //                FRLog.e("---------onFling---------")
